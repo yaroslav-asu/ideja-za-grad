@@ -8,12 +8,16 @@ import mapboxgl from "mapbox-gl";
 
 class App extends React.Component<{}, {
     createMarkerMenuShowed: boolean,
-    markerCoords: [number, number],
     menuCoords: [number, number],
     screen: {
         width: number,
         height: number
     },
+    marker: {
+        coords: [number, number],
+        type: string,
+        description: string
+    }
 }> {
     private markers: MarkerComponent[] = [];
     private mapRef = React.createRef<MapComponent>();
@@ -22,7 +26,11 @@ class App extends React.Component<{}, {
         super(props);
         this.state = {
             createMarkerMenuShowed: false,
-            markerCoords: [0, 0],
+            marker: {
+                coords: [0, 0],
+                type: '',
+                description: ''
+            },
             menuCoords: [0, 0],
             screen: {
                 width: window.innerWidth,
@@ -63,9 +71,22 @@ class App extends React.Component<{}, {
                 onClose={() => {
                     this.setState({createMarkerMenuShowed: false})
                 }}
+                changeData={(data: { type: string, description: string }) => {
+                    this.setState({
+                        marker: {
+                            type: data.type,
+                            description: data.description,
+                            coords: this.state.marker.coords
+                        }
+                    })
+                }}
                 onSave={() => {
                     this.setState({createMarkerMenuShowed: false})
-                    this.markers.push(new MarkerComponent({coords: this.state.markerCoords}))
+                    this.markers.push(new MarkerComponent({
+                        coords: this.state.marker.coords,
+                        type: 'type',
+                        description: 'description'
+                    }))
                     this.renderMarkers()
                 }}
             />
@@ -80,7 +101,11 @@ class App extends React.Component<{}, {
                         setTimeout(() => {
                             this.setState({
                                 createMarkerMenuShowed: true,
-                                markerCoords: [e.lngLat.lng, e.lngLat.lat],
+                                marker: {
+                                    coords: [e.lngLat.lng, e.lngLat.lat],
+                                    type: this.state.marker.type,
+                                    description: this.state.marker.description
+                                },
                                 menuCoords: [e.point.x, e.point.y]
                             })
                         })
@@ -91,7 +116,7 @@ class App extends React.Component<{}, {
                     startCoords={[20.457273, 44.787197]}
                 />
             </div>
-        );
+        )
     }
 }
 
