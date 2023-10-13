@@ -1,0 +1,9 @@
+.create_marker_menu {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border-radius: 10px;
+  z-index: 10000;
+  background-color: white;
+}
