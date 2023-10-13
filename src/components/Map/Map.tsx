@@ -3,16 +3,19 @@ import {Map} from 'mapbox-gl';
 
 export class MapComponent extends React.Component<{
     onClick: Function,
+    closeMenu: Function,
     startCoords: [number, number]
 }, {}> {
     private mapRef = React.createRef<HTMLDivElement>();
     private readonly onClick: Function;
+    private readonly closeMenu: Function;
     private readonly startCoords: [number, number] = [0, 0];
     public map: Map | null = null;
 
-    constructor(props: { onClick: Function, startCoords: [number, number] }) {
+    constructor(props: { onClick: Function, closeMenu: Function, startCoords: [number, number] }) {
         super(props);
         this.onClick = props.onClick;
+        this.closeMenu = props.closeMenu;
         this.startCoords = props.startCoords;
     }
 
@@ -35,6 +38,9 @@ export class MapComponent extends React.Component<{
             this.map = this.initMap()
             this.map?.on('click', (e) => {
                 this.onClick(e)
+            })
+            this.map?.on('movestart', (e) => {
+                this.closeMenu(e)
             })
         }
     }
