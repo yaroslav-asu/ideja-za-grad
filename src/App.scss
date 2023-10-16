@@ -1,4 +1,16 @@
-.map {
+.wrapper {
   height: 100dvh;
   width: 100dvw;
+  display: flex;
+}
+
+$animation-speed: 0.5s;
+.map {
+  height: 100%;
+  width: 100%;
+  transition: width $animation-speed ease;
+}
+
+.side_menu {
+  transition: width $animation-speed ease;
 }
