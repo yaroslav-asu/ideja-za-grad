@@ -1,12 +1,13 @@
 import React from "react";
 import './CreateMarkerMenu.scss';
+import markerType from "../../types/markerTypes";
 
 class CreateMarkerMenu extends React.Component<{
     coords: [number, number],
     onClose: Function,
     onSave: Function,
     changeData: Function,
-    types: string[]
+    types: markerType[]
 }, {
     type: string,
     description: string,
@@ -21,11 +22,11 @@ class CreateMarkerMenu extends React.Component<{
         onSave: Function;
         coords: [number, number];
         changeData: Function;
-        types: string[];
+        types: markerType[];
     }) {
         super(props);
         this.state = {
-            type: props.types[0],
+            type: props.types[0].value,
             description: ''
         }
         this.changeData = this.props.changeData;
@@ -52,7 +53,7 @@ class CreateMarkerMenu extends React.Component<{
                     }}
                 >
                     {this.props.types.map((type, index) => {
-                        return <option key={index} value={type}>{type}</option>
+                        return <option key={index} value={type.value}>{type.title}</option>
                     })}
                 </select>
                 <textarea value={this.state.description} onChange={e => {

@@ -62,9 +62,6 @@ export class MapComponent extends React.Component<{
             this.map?.on('click', (e) => {
                 this.onClick(e)
             })
-            this.map?.on('movestart', (e) => {
-                this.closeMenu(e)
-            })
         }
     }
 

@@ -1,6 +1,12 @@
 import mapboxgl from "mapbox-gl";
 import './MarkerComponent.scss'
 
+export type markerPropsType = {
+    coords: [number, number],
+    type: string,
+    description: string
+}
+
 export class MarkerComponent extends mapboxgl.Marker {
     public coords: [number, number];
     public type: string;

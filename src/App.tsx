@@ -3,9 +3,11 @@ import './App.scss';
 import 'mapbox-gl/dist/mapbox-gl.css'
 import {MapComponent} from "./components/Map/Map";
 import CreateMarkerMenu from "./components/CreateMarkerMenu/CreateMarkerMenu";
-import {MarkerComponent} from "./components/Marker/MarkerComponent";
+import {MarkerComponent, markerPropsType} from "./components/Marker/MarkerComponent";
 import mapboxgl from "mapbox-gl";
 import {MarkerDescription} from "./components/SideMenu/MarkerDescription";
+import markerType from "./types/markerTypes";
+import axios from "./axios";
 
 class App extends React.Component<{}, {
     createMarkerMenuShowed: boolean,
@@ -24,7 +26,7 @@ class App extends React.Component<{}, {
         type: string,
         description: string
     },
-    types: string[]
+    types: { title: string, value: string }[]
 }> {
     private markers: MarkerComponent[] = [];
     private mapRef = React.createRef<MapComponent>();
@@ -48,7 +50,7 @@ class App extends React.Component<{}, {
                 width: window.innerWidth,
                 height: window.innerHeight
             },
-            types: ['type_1', 'type_2']
+            types: []
         }
         this.render = this.render.bind(this);
     }
@@ -59,10 +61,47 @@ class App extends React.Component<{}, {
         })
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         this.renderMarkers()
         window.addEventListener('resize', () => this.handleScreenResize())
         this.handleScreenResize()
+        this.setState(
+            {
+                types: await this.getTypes(),
+            }
+        )
+        this.getMarkers().then(() => {
+            this.renderMarkers()
+        })
+        this.renderMarkers()
+    }
+
+    async getTypes() {
+        return await axios.get("types").then(res => {
+            return res.data.data.map((type: { id: number, title: string }) => {
+                return {
+                    title: type.title,
+                    value: type.id.toString()
+                }
+            })
+        }).catch(err => {
+            console.log(err)
+            return []
+        })
+    }
+
+    async getMarkers() {
+        return axios.get(`markers`,).then(res => {
+            for (let marker of res.data.data) {
+                this.createMarker({
+                    coords: [marker.coords.lng / 10 ** 15, marker.coords.lat / 10 ** 15],
+                    type: marker.type.id.toString(),
+                    description: marker.description
+                })
+            }
+        }).catch(err => {
+            console.log(err)
+        })
     }
 
     componentWillUnmount() {
@@ -76,12 +115,45 @@ class App extends React.Component<{}, {
         }
     }
 
-    createMarker() {
-        let marker = new MarkerComponent({...this.state.marker})
+    saveMarker(props: markerPropsType) {
+        console.log({
+            type: {
+                id: parseInt(props.type)
+            },
+            description: props.description,
+            coords: {
+                lat: props.coords[1] * 10 ** 15,
+                lng: props.coords[0] * 10 ** 15
+            }
+        })
+        axios.post("markers", {
+            type: {
+                id: parseInt(props.type)
+            },
+            description: props.description,
+            coords: {
+                lat: props.coords[1] * 10 ** 15,
+                lng: props.coords[0] * 10 ** 15
+            }
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(res => {
+            console.log(res)
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
+    createMarker(props: markerPropsType) {
+        let marker = new MarkerComponent(props)
         marker.getElement().addEventListener('click', e => {
+            const type = this.state.types.find(type => type.value === marker.type) as markerType
+            console.log(this.state.types, marker.type)
             this.setState(() => ({
                 sideMenu: {
-                    type: marker.type,
+                    type: type.title,
                     description: marker.description,
                     showed: true
                 },
@@ -95,7 +167,7 @@ class App extends React.Component<{}, {
     render() {
         return (
             <div className="App">
-                {this.state.createMarkerMenuShowed ? <CreateMarkerMenu
+                {this.state.createMarkerMenuShowed && this.state.types.length > 0 ? <CreateMarkerMenu
                     types={this.state.types}
                     coords={[
                         Math.min(this.state.menuCoords[0], this.state.screen.width - 285),
@@ -112,7 +184,8 @@ class App extends React.Component<{}, {
                     }}
                     onSave={() => {
                         this.setState({createMarkerMenuShowed: false})
-                        this.createMarker()
+                        this.createMarker({...this.state.marker})
+                        this.saveMarker({...this.state.marker})
                         this.renderMarkers()
                     }}
                     onClose={() => {
