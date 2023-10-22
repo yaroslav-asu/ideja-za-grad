@@ -94,7 +94,7 @@ class App extends React.Component<{}, {
         return axios.get(`markers`,).then(res => {
             for (let marker of res.data.data) {
                 this.createMarker({
-                    coords: [marker.coords.lng / 10 ** 15, marker.coords.lat / 10 ** 15],
+                    coords: [marker.coords.lng, marker.coords.lat],
                     type: marker.type.id.toString(),
                     description: marker.description
                 })
@@ -116,24 +116,14 @@ class App extends React.Component<{}, {
     }
 
     saveMarker(props: markerPropsType) {
-        console.log({
-            type: {
-                id: parseInt(props.type)
-            },
-            description: props.description,
-            coords: {
-                lat: props.coords[1] * 10 ** 15,
-                lng: props.coords[0] * 10 ** 15
-            }
-        })
         axios.post("markers", {
             type: {
                 id: parseInt(props.type)
             },
             description: props.description,
             coords: {
-                lat: props.coords[1] * 10 ** 15,
-                lng: props.coords[0] * 10 ** 15
+                lat: props.coords[1],
+                lng: props.coords[0]
             }
         }, {
             headers: {
@@ -150,7 +140,6 @@ class App extends React.Component<{}, {
         let marker = new MarkerComponent(props)
         marker.getElement().addEventListener('click', e => {
             const type = this.state.types.find(type => type.value === marker.type) as markerType
-            console.log(this.state.types, marker.type)
             this.setState(() => ({
                 sideMenu: {
                     type: type.title,
