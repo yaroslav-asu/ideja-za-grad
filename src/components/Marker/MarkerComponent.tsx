@@ -2,6 +2,7 @@ import mapboxgl from "mapbox-gl";
 import './MarkerComponent.scss'
 
 export type markerPropsType = {
+    id: number,
     coords: [number, number],
     type: string,
     description: string
@@ -11,8 +12,9 @@ export class MarkerComponent extends mapboxgl.Marker {
     public coords: [number, number];
     public type: string;
     public description: string;
+    public id: number;
 
-    constructor(props: { coords: [number, number], type: string, description: string }) {
+    constructor(props: markerPropsType) {
         let el = document.createElement('div')
         el.className = 'marker'
         super({element: el});
@@ -20,5 +22,6 @@ export class MarkerComponent extends mapboxgl.Marker {
         this.coords = props.coords
         this.type = props.type
         this.description = props.description
+        this.id = props.id
     }
 }

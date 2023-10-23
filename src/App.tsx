@@ -17,10 +17,10 @@ type createMenuMarkerType = {
 }
 
 class App extends React.Component<{}, {
-
     createMarkerMenuShowed: boolean,
     sideMenu: {
         showed: boolean,
+        markerId: number,
         type: string,
         description: string
     }
@@ -41,6 +41,7 @@ class App extends React.Component<{}, {
             createMarkerMenuShowed: false,
             sideMenu: {
                 showed: false,
+                markerId: 0,
                 type: '',
                 description: ''
             },
@@ -96,9 +97,10 @@ class App extends React.Component<{}, {
     }
 
     async getMarkers() {
-        return axios.get(`markers`,).then(res => {
+        return axios.get(`markers`).then(res => {
             for (let marker of res.data.data) {
                 this.createMarker({
+                    id: marker.id,
                     coords: [marker.coords.lat, marker.coords.lng],
                     type: marker.type.id.toString(),
                     description: marker.description
@@ -113,14 +115,13 @@ class App extends React.Component<{}, {
         window.removeEventListener('resize', () => this.handleScreenResize())
     }
 
-
     renderMarkers() {
         for (let marker of this.markers) {
             marker.addTo(this.mapRef.current?.map as mapboxgl.Map)
         }
     }
 
-    saveMarker(props: createMenuMarkerType) {
+    async saveMarker(props: createMenuMarkerType): Promise<markerPropsType> {
         let formData = new FormData()
         formData.append('type', props.type)
         formData.append('description', props.description)
@@ -129,12 +130,12 @@ class App extends React.Component<{}, {
         for (let image of props.images) {
             formData.append('images', image)
         }
-        axios.post("markers", formData).then(res => {
+        return await axios.post("markers", formData).then(res => {
             console.log(res)
+            return res.data.data
         }).catch(err => {
             console.log(err)
-        }).finally(() => {
-
+            return 0
         })
     }
 
@@ -146,7 +147,8 @@ class App extends React.Component<{}, {
                 sideMenu: {
                     type: type.title,
                     description: marker.description,
-                    showed: true
+                    showed: true,
+                    markerId: marker.id
                 },
                 createMarkerMenuShowed: false
             }))
@@ -174,10 +176,9 @@ class App extends React.Component<{}, {
                             }
                         })
                     }}
-                    onSave={() => {
+                    onSave={async () => {
                         this.setState({createMarkerMenuShowed: false})
-                        this.createMarker({...this.state.createMenuMarker})
-                        this.saveMarker({...this.state.createMenuMarker})
+                        await this.saveMarker({...this.state.createMenuMarker})
                         this.renderMarkers()
                     }}
                     onClose={() => {
@@ -207,6 +208,7 @@ class App extends React.Component<{}, {
                         startCoords={[20.457273, 44.787197]}
                     />
                     <MarkerDescription
+                        markerId={this.state.sideMenu.markerId}
                         type={this.state.sideMenu.type}
                         style={{width: this.state.sideMenu.showed ? '30vw' : '0vw'}}
                         description={this.state.sideMenu.description}
