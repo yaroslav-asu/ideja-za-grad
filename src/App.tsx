@@ -9,7 +9,15 @@ import {MarkerDescription} from "./components/SideMenu/MarkerDescription";
 import markerType from "./types/markerTypes";
 import axios from "./axios";
 
+type createMenuMarkerType = {
+    coords: [number, number],
+    type: string,
+    description: string,
+    images: File[],
+}
+
 class App extends React.Component<{}, {
+
     createMarkerMenuShowed: boolean,
     sideMenu: {
         showed: boolean,
@@ -21,11 +29,7 @@ class App extends React.Component<{}, {
         width: number,
         height: number
     },
-    marker: {
-        coords: [number, number],
-        type: string,
-        description: string
-    },
+    createMenuMarker: createMenuMarkerType,
     types: { title: string, value: string }[]
 }> {
     private markers: MarkerComponent[] = [];
@@ -40,10 +44,11 @@ class App extends React.Component<{}, {
                 type: '',
                 description: ''
             },
-            marker: {
+            createMenuMarker: {
                 coords: [0, 0],
                 type: '',
-                description: ''
+                description: '',
+                images: []
             },
             menuCoords: [0, 0],
             screen: {
@@ -94,7 +99,7 @@ class App extends React.Component<{}, {
         return axios.get(`markers`,).then(res => {
             for (let marker of res.data.data) {
                 this.createMarker({
-                    coords: [marker.coords.lng, marker.coords.lat],
+                    coords: [marker.coords.lat, marker.coords.lng],
                     type: marker.type.id.toString(),
                     description: marker.description
                 })
@@ -115,24 +120,21 @@ class App extends React.Component<{}, {
         }
     }
 
-    saveMarker(props: markerPropsType) {
-        axios.post("markers", {
-            type: {
-                id: parseInt(props.type)
-            },
-            description: props.description,
-            coords: {
-                lat: props.coords[1],
-                lng: props.coords[0]
-            }
-        }, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(res => {
+    saveMarker(props: createMenuMarkerType) {
+        let formData = new FormData()
+        formData.append('type', props.type)
+        formData.append('description', props.description)
+        formData.append('lat', JSON.stringify(props.coords[0]))
+        formData.append('lng', JSON.stringify(props.coords[1]))
+        for (let image of props.images) {
+            formData.append('images', image)
+        }
+        axios.post("markers", formData).then(res => {
             console.log(res)
         }).catch(err => {
             console.log(err)
+        }).finally(() => {
+
         })
     }
 
@@ -162,19 +164,20 @@ class App extends React.Component<{}, {
                         Math.min(this.state.menuCoords[0], this.state.screen.width - 285),
                         Math.min(this.state.menuCoords[1], this.state.screen.height - 170)
                     ]}
-                    changeData={(data: { type: string, description: string }) => {
+                    changeData={(data: { type: string, description: string, images: Array<File> }) => {
                         this.setState({
-                            marker: {
+                            createMenuMarker: {
+                                ...this.state.createMenuMarker,
                                 type: data.type,
                                 description: data.description,
-                                coords: this.state.marker.coords
+                                images: data.images
                             }
                         })
                     }}
                     onSave={() => {
                         this.setState({createMarkerMenuShowed: false})
-                        this.createMarker({...this.state.marker})
-                        this.saveMarker({...this.state.marker})
+                        this.createMarker({...this.state.createMenuMarker})
+                        this.saveMarker({...this.state.createMenuMarker})
                         this.renderMarkers()
                     }}
                     onClose={() => {
@@ -190,10 +193,9 @@ class App extends React.Component<{}, {
                             setTimeout(() => {
                                 this.setState({
                                     createMarkerMenuShowed: true,
-                                    marker: {
+                                    createMenuMarker: {
+                                        ...this.state.createMenuMarker,
                                         coords: [e.lngLat.lng, e.lngLat.lat],
-                                        type: this.state.marker.type,
-                                        description: this.state.marker.description
                                     },
                                     menuCoords: [e.point.x, e.point.y]
                                 })

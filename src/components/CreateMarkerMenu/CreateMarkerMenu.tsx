@@ -1,6 +1,7 @@
 import React from "react";
 import './CreateMarkerMenu.scss';
 import markerType from "../../types/markerTypes";
+import {ImagesUploader} from "../ImagesLoad/ImagesUploader";
 
 class CreateMarkerMenu extends React.Component<{
     coords: [number, number],
@@ -15,7 +16,6 @@ class CreateMarkerMenu extends React.Component<{
     protected wrapperRef = React.createRef<HTMLDivElement>();
     public width: number = 0;
     public height: number = 0;
-    private readonly changeData: Function;
 
     constructor(props: {
         onClose: Function;
@@ -29,8 +29,6 @@ class CreateMarkerMenu extends React.Component<{
             type: props.types[0].value,
             description: ''
         }
-        this.changeData = this.props.changeData;
-        this.changeData(this.state);
     }
 
     componentDidMount() {
@@ -49,16 +47,23 @@ class CreateMarkerMenu extends React.Component<{
                     value={this.state.type}
                     onChange={e => {
                         this.setState({type: e.target.value})
-                        this.changeData({...this.state, type: e.target.value})
+                        this.props.changeData({...this.state, type: e.target.value})
                     }}
                 >
                     {this.props.types.map((type, index) => {
                         return <option key={index} value={type.value}>{type.title}</option>
                     })}
                 </select>
+                <ImagesUploader
+                    onUpdate={
+                        (images: Array<File>) => this.props.changeData(
+                            {...this.state, images: images}
+                        )
+                    }
+                />
                 <textarea value={this.state.description} onChange={e => {
                     this.setState({description: e.target.value})
-                    this.changeData({type: this.state.type, description: e.target.value})
+                    this.props.changeData({type: this.state.type, description: e.target.value})
                 }}/>
                 <button onClick={() => this.props.onSave()}>Save</button>
                 <button onClick={() => this.props.onClose()}>Close</button>
