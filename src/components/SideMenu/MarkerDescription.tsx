@@ -1,87 +1,39 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import './MarkerDescription.scss'
 import axios from "../../axios";
 
-type markerDescriptionPropsType = {
-    type: string,
-    description: string,
-    style?: Object,
-    markerId: number,
+export type markerImage = {
+    id: number,
+    title: string,
 }
-type markerDescriptionStateType = markerDescriptionPropsType & { images: string[] }
 
-export class MarkerDescription extends React.Component<{
+export default function MarkerDescription(props: {
     type: string,
     description: string,
     style?: Object,
     handleClose: Function,
     markerId: number,
-}, markerDescriptionStateType
-> {
+}) {
+    const [images, setImages] = useState(Array<markerImage>)
 
-    constructor(props: {
-        type: string,
-        description: string,
-        style?: Object,
-        handleClose: Function,
-        markerId: number,
-    }) {
-        super(props);
-        this.state = {
-            type: props.type,
-            description: props.description,
-            style: props.style,
-            markerId: props.markerId,
-            images: []
-        }
-    }
-
-    componentDidUpdate(prevProps: Readonly<markerDescriptionPropsType>, prevState: Readonly<markerDescriptionPropsType>, snapshot?: any) {
-        if (prevProps.markerId !== this.props.markerId && this.props.markerId !== 0) {
-            this.setState({
-                markerId: this.props.markerId
-            })
-            this.getMarkerImages(this.props.markerId)
-        }
-        if (prevProps.type !== this.props.type) {
-            this.setState({
-                type: this.props.type,
-            })
-        }
-        if (prevProps.style !== this.props.style) {
-            this.setState({
-                style: this.props.style
-            })
-        }
-        if (prevProps.description !== this.props.description) {
-            this.setState({
-                description: this.props.description
-            })
-        }
-    }
-
-    getMarkerImages(id: number) {
-        axios.get(`markers/${id}/images`).then((res) => {
-            this.setState({
-                images: res.data.data.map((image: { id: number, title: string }) => {
-                    return `${process.env.REACT_APP_API_URL}/static/${image.title}`
-                })
-            })
+    useEffect(() => {
+        axios.get(`markers/${props.markerId}/images`).then((res) => {
+            setImages(res.data.data)
         }).catch((err) => {
             console.log(err)
         })
-    }
+    }, [props.markerId]);
 
-    render() {
-        return (
-            <div className="side_menu" style={this.state.style}>
-                <button onClick={() => this.props.handleClose()}>Close</button>
-                <h1>{this.state.type}</h1>
-                <p>{this.state.description}</p>
-                {this.state.images.map((imageUrl, id) => {
-                    return <img src={imageUrl} alt="marker image" key={id}/>
-                })}
-            </div>
-        )
-    }
+    return <div className="side_menu" style={props.style}>
+        <button onClick={() => props.handleClose()}>Close</button>
+        <h1>{props.type}</h1>
+        <p>{props.description}</p>
+        {images.map(image => {
+            return <img
+                src={`${process.env.REACT_APP_API_URL}/static/${image.title}`}
+                alt="marker image"
+                key={image.id}
+            />
+        })}
+    </div>
 }

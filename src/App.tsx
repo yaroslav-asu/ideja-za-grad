@@ -5,7 +5,7 @@ import {MapComponent} from "./components/Map/Map";
 import CreateMarkerMenu from "./components/CreateMarkerMenu/CreateMarkerMenu";
 import {MarkerComponent, markerPropsType} from "./components/Marker/MarkerComponent";
 import mapboxgl from "mapbox-gl";
-import {MarkerDescription} from "./components/SideMenu/MarkerDescription";
+import MarkerDescription from "./components/SideMenu/MarkerDescription";
 import markerType from "./types/markerTypes";
 import axios from "./axios";
 
