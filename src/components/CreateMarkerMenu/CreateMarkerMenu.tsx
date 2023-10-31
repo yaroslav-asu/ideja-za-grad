@@ -1,7 +1,7 @@
 import React from "react";
 import './CreateMarkerMenu.scss';
 import markerType from "../../types/markerTypes";
-import {ImagesUploader} from "../ImagesUploader/ImagesUploader";
+import ImagesUploader from "../ImagesUploader/ImagesUploader";
 import CloseIcon from '@mui/icons-material/Close';
 
 const CreateMarkerMenu = (props: {
