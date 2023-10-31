@@ -24,7 +24,6 @@ class App extends React.Component<{}, {
         type: string,
         description: string
     }
-    menuCoords: [number, number],
     screen: {
         width: number,
         height: number
@@ -51,7 +50,6 @@ class App extends React.Component<{}, {
                 description: '',
                 images: []
             },
-            menuCoords: [0, 0],
             screen: {
                 width: window.innerWidth,
                 height: window.innerHeight
@@ -162,10 +160,6 @@ class App extends React.Component<{}, {
             <div className="App">
                 {this.state.createMarkerMenuShowed && this.state.types.length > 0 ? <CreateMarkerMenu
                     types={this.state.types}
-                    coords={[
-                        Math.min(this.state.menuCoords[0], this.state.screen.width - 285),
-                        Math.min(this.state.menuCoords[1], this.state.screen.height - 170)
-                    ]}
                     changeData={(data: { type: string, description: string, images: Array<File> }) => {
                         this.setState({
                             createMenuMarker: {
@@ -197,7 +191,6 @@ class App extends React.Component<{}, {
                                         ...this.state.createMenuMarker,
                                         coords: [e.lngLat.lng, e.lngLat.lat],
                                     },
-                                    menuCoords: [e.point.x, e.point.y]
                                 })
                             })
                         }}

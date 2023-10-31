@@ -2,9 +2,9 @@ import React from "react";
 import './CreateMarkerMenu.scss';
 import markerType from "../../types/markerTypes";
 import {ImagesUploader} from "../ImagesUploader/ImagesUploader";
+import CloseIcon from '@mui/icons-material/Close';
 
 class CreateMarkerMenu extends React.Component<{
-    coords: [number, number],
     onClose: Function,
     onSave: Function,
     changeData: Function,
@@ -43,9 +43,12 @@ class CreateMarkerMenu extends React.Component<{
             <div
                 ref={this.wrapperRef}
                 className="create_marker_menu"
-                style={{left: this.props.coords[0] + 10, top: this.props.coords[1] + 10}}
             >
+                <button className="close_button" onClick={() => this.props.onClose()}>
+                    <CloseIcon/>
+                </button>
                 <select
+                    className="menu_element"
                     value={this.state.type}
                     onChange={e => {
                         this.setState({type: e.target.value})
@@ -66,12 +69,11 @@ class CreateMarkerMenu extends React.Component<{
                         }
                     }
                 />
-                <textarea value={this.state.description} onChange={e => {
+                <textarea className="menu_element description_textarea" value={this.state.description} onChange={e => {
                     this.setState({description: e.target.value})
                     this.props.changeData({...this.state, description: e.target.value})
                 }}/>
-                <button onClick={() => this.props.onSave()}>Save</button>
-                <button onClick={() => this.props.onClose()}>Close</button>
+                <button className="menu_element" onClick={() => this.props.onSave()}>Save</button>
             </div>
         )
     }

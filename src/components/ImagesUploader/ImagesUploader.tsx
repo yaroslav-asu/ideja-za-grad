@@ -1,5 +1,8 @@
 import React from "react";
 import ComponentsSlider from "../ComponentsSlider/ComponentsSlider";
+import './ImagesUploader.scss'
+import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
+import DeletableImage from "./DeletableImage/DeletableImage";
 
 export class ImagesUploader extends React.Component<{
     onUpdate: Function
@@ -20,28 +23,30 @@ export class ImagesUploader extends React.Component<{
 
     render() {
         return (
-            <div>
-                <input ref={this.inputRef} type="file" accept="image/*" onChange={(e) => {
-                    const uploadedFile = e.target.files![0];
-                    this.setState({
-                        files: [...this.state.files, uploadedFile],
-                    })
-                    this.props.onUpdate([...this.state.files, uploadedFile])
-                }}/>
+            <div className="images_uploader">
+                {this.state.files.length < 5 ? <button className="upload_button menu_element">
+                    <AddPhotoAlternateOutlinedIcon/>
+                    <input className="image_input" ref={this.inputRef} type="file" accept="image/*" onChange={(e) => {
+                        const uploadedFile = e.target.files![0];
+                        this.setState({
+                            files: [...this.state.files, uploadedFile],
+                        })
+                        this.props.onUpdate([...this.state.files, uploadedFile])
+                    }}/>
+                </button> : null}
+
                 <ComponentsSlider elements={this.state.files.map(
                     (image, index) => {
-                        return <div>
-                            <button onClick={() => {
-                                const newFiles = this.state.files.filter((_, i) => i !== index)
-                                this.setState({
-                                    files: newFiles
-                                })
-                                this.props.onUpdate(newFiles)
-                            }
-                            }>Delete
-                            </button>
-                            <img key={index} src={URL.createObjectURL(image)} alt="" style={{display: "block"}}/>
-                        </div>
+                        return <DeletableImage
+                            src={URL.createObjectURL(image)}
+                            onDelete={() => {
+                                    const newFiles = this.state.files.filter((_, i) => i !== index)
+                                    this.setState({
+                                        files: newFiles
+                                    })
+                                    this.props.onUpdate(newFiles)
+                                }}
+                        />
                     }
                 )}/>
             </div>

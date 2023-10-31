@@ -1,0 +1,21 @@
+.deletable_image {
+  position: relative;
+  max-width: 100%;
+  width: 100%;
+
+  .delete_button {
+    position: absolute;
+    display: flex;
+    background: white;
+    border-radius: 5px;
+    right: 0;
+    border: 1px solid #9d9d9d;
+    cursor: pointer;
+  }
+
+  img {
+    max-width: 100%;
+    width: 100%;
+    object-fit: contain;
+  }
+}

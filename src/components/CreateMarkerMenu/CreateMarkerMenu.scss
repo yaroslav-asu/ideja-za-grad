@@ -6,4 +6,35 @@
   border-radius: 10px;
   z-index: 10000;
   background-color: white;
+  gap: 10px;
+  max-width: 400px;
+  border: 1px solid #9d9d9d;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  .menu_element {
+    background: none;
+    border: 1px solid #9d9d9d;
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 5px;
+  }
+
+  .close_button {
+    align-self: flex-end;
+    display: flex;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .description_textarea {
+    resize: none;
+  }
+
+  .components_slider {
+    max-height: 140px;
+  }
 }
+

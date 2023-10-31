@@ -9,13 +9,13 @@ export type markerImage = {
     title: string,
 }
 
-export default function MarkerDescription(props: {
+export default (props: {
     type: string,
     description: string,
     handleClose: Function,
     markerId: number,
     additionalClass: string,
-}) {
+}) => {
     const [images, setImages] = useState(Array<markerImage>)
 
     useEffect(() => {
@@ -26,12 +26,9 @@ export default function MarkerDescription(props: {
         })
     }, [props.markerId]);
 
-    return <div className={"marker_description " + props.additionalClass}>
-        <button className="close_button" onClick={() => props.handleClose()}>
-            <ArrowForwardIosIcon/>
-        </button>
-        <h1>{props.type}</h1>
-        <ComponentsSlider
+    let imagesSlider: React.ReactElement | null = null
+    if (images.length > 0) {
+        imagesSlider = <ComponentsSlider
             elements={images.map(image => {
                 return <img
                     src={`${process.env.REACT_APP_API_URL}/static/${image.title}`}
@@ -40,6 +37,16 @@ export default function MarkerDescription(props: {
                 />
             })}
         />
-        <p>{props.description}</p>
+    }
+
+    return <div className={"marker_description " + props.additionalClass}>
+        <button className="close_button" onClick={() => props.handleClose()}>
+            <ArrowForwardIosIcon/>
+        </button>
+        <div className="content_wrapper">
+            <h1>{props.type}</h1>
+            {imagesSlider}
+            <p>{props.description}</p>
+        </div>
     </div>
 }
