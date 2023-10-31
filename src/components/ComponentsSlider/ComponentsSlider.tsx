@@ -11,7 +11,7 @@ const ComponentsSlider = (
     useEffect(() => {
         if (currentComponentId > 0 && currentComponentId >= props.elements.length)
             changeCurrentComponentId(props.elements.length - 1)
-    }, [props.elements.length]);
+    }, [props.elements.length, currentComponentId]);
     let prevButton: React.ReactElement | null = null
     let nextButton: React.ReactElement | null = null
 

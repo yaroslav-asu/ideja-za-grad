@@ -9,7 +9,7 @@ export type markerImage = {
     title: string,
 }
 
-export default (props: {
+const MarkerDescription = (props: {
     type: string,
     description: string,
     handleClose: Function,
@@ -32,7 +32,7 @@ export default (props: {
             elements={images.map(image => {
                 return <img
                     src={`${process.env.REACT_APP_API_URL}/static/${image.title}`}
-                    alt="marker image"
+                    alt=""
                     key={image.id}
                 />
             })}
@@ -50,3 +50,4 @@ export default (props: {
         </div>
     </div>
 }
+export default MarkerDescription;

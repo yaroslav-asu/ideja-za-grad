@@ -4,7 +4,7 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 import {MapComponent} from "./components/Map/Map";
 import CreateMarkerMenu from "./components/CreateMarkerMenu/CreateMarkerMenu";
 import {MarkerComponent, markerPropsType} from "./components/Marker/MarkerComponent";
-import mapboxgl from "mapbox-gl";
+import {Map} from "mapbox-gl";
 import MarkerDescription from "./components/MarkerDescription/MarkerDescription";
 import markerType from "./types/markerTypes";
 import axios from "./axios";
@@ -32,7 +32,7 @@ class App extends React.Component<{}, {
     types: { title: string, value: string }[]
 }> {
     private markers: MarkerComponent[] = [];
-    private mapRef = React.createRef<MapComponent>();
+    private mapRef = React.createRef<Map>();
 
     constructor(props: {}) {
         super(props);
@@ -115,7 +115,7 @@ class App extends React.Component<{}, {
 
     renderMarkers() {
         for (let marker of this.markers) {
-            marker.addTo(this.mapRef.current?.map as mapboxgl.Map)
+            marker.addTo(this.mapRef.current as Map)
         }
     }
 
@@ -181,7 +181,7 @@ class App extends React.Component<{}, {
                 /> : null}
                 <div className="wrapper">
                     <MapComponent
-                        ref={this.mapRef}
+                        map={this.mapRef}
                         onClick={(e: any) => {
                             this.setState({createMarkerMenuShowed: false})
                             setTimeout(() => {
