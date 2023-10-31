@@ -12,6 +12,7 @@ class CreateMarkerMenu extends React.Component<{
 }, {
     type: string,
     description: string,
+    images: Array<File>
 }> {
     protected wrapperRef = React.createRef<HTMLDivElement>();
     public width: number = 0;
@@ -27,7 +28,8 @@ class CreateMarkerMenu extends React.Component<{
         super(props);
         this.state = {
             type: props.types[0].value,
-            description: ''
+            description: '',
+            images: []
         }
     }
 
@@ -56,14 +58,17 @@ class CreateMarkerMenu extends React.Component<{
                 </select>
                 <ImagesUploader
                     onUpdate={
-                        (images: Array<File>) => this.props.changeData(
-                            {...this.state, images: images}
-                        )
+                        (images: Array<File>) => {
+                            this.setState({images})
+                            this.props.changeData(
+                                {...this.state, images: images}
+                            )
+                        }
                     }
                 />
                 <textarea value={this.state.description} onChange={e => {
                     this.setState({description: e.target.value})
-                    this.props.changeData({type: this.state.type, description: e.target.value})
+                    this.props.changeData({...this.state, description: e.target.value})
                 }}/>
                 <button onClick={() => this.props.onSave()}>Save</button>
                 <button onClick={() => this.props.onClose()}>Close</button>
