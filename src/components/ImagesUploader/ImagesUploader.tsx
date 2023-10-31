@@ -1,4 +1,5 @@
 import React from "react";
+import ComponentsSlider from "../ComponentsSlider/ComponentsSlider";
 
 export class ImagesUploader extends React.Component<{
     onUpdate: Function
@@ -27,24 +28,22 @@ export class ImagesUploader extends React.Component<{
                     })
                     this.props.onUpdate([...this.state.files, uploadedFile])
                 }}/>
-                <div>{
-                    this.state.files.map(
-                        (image, index) => {
-                            return <div>
-                                <button onClick={() => {
-                                    const newFiles = this.state.files.filter((_, i) => i !== index)
-                                    this.setState({
-                                        files: newFiles
-                                    })
-                                    this.props.onUpdate(newFiles)
-                                }
-                                }>Delete
-                                </button>
-                                <img key={index} src={URL.createObjectURL(image)} alt="" style={{display: "block"}}/>
-                            </div>
-                        }
-                    )
-                }</div>
+                <ComponentsSlider elements={this.state.files.map(
+                    (image, index) => {
+                        return <div>
+                            <button onClick={() => {
+                                const newFiles = this.state.files.filter((_, i) => i !== index)
+                                this.setState({
+                                    files: newFiles
+                                })
+                                this.props.onUpdate(newFiles)
+                            }
+                            }>Delete
+                            </button>
+                            <img key={index} src={URL.createObjectURL(image)} alt="" style={{display: "block"}}/>
+                        </div>
+                    }
+                )}/>
             </div>
         )
     }

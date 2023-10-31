@@ -1,7 +1,7 @@
 import React from "react";
 import './CreateMarkerMenu.scss';
 import markerType from "../../types/markerTypes";
-import {ImagesUploader} from "../ImagesLoad/ImagesUploader";
+import {ImagesUploader} from "../ImagesUploader/ImagesUploader";
 
 class CreateMarkerMenu extends React.Component<{
     coords: [number, number],

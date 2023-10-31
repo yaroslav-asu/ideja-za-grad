@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import './MarkerDescription.scss'
 import axios from "../../axios";
+import ComponentsSlider from "../ComponentsSlider/ComponentsSlider";
 
 export type markerImage = {
     id: number,
@@ -27,13 +28,15 @@ export default function MarkerDescription(props: {
     return <div className="side_menu" style={props.style}>
         <button onClick={() => props.handleClose()}>Close</button>
         <h1>{props.type}</h1>
+        <ComponentsSlider
+            elements={images.map(image => {
+                return <img
+                    src={`${process.env.REACT_APP_API_URL}/static/${image.title}`}
+                    alt="marker image"
+                    key={image.id}
+                />
+            })}
+        />
         <p>{props.description}</p>
-        {images.map(image => {
-            return <img
-                src={`${process.env.REACT_APP_API_URL}/static/${image.title}`}
-                alt="marker image"
-                key={image.id}
-            />
-        })}
     </div>
 }
