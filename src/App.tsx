@@ -187,7 +187,6 @@ class App extends React.Component<{}, {
                 /> : null}
                 <div className="wrapper">
                     <MapComponent
-                        style={{width: this.state.sideMenu.showed ? '70vw' : '100vw'}}
                         ref={this.mapRef}
                         onClick={(e: any) => {
                             this.setState({createMarkerMenuShowed: false})
@@ -210,7 +209,7 @@ class App extends React.Component<{}, {
                     <MarkerDescription
                         markerId={this.state.sideMenu.markerId}
                         type={this.state.sideMenu.type}
-                        style={{width: this.state.sideMenu.showed ? '30vw' : '0vw'}}
+                        additionalClass={'marker_description' + (this.state.sideMenu.showed ? '--showed' : '--hidden')}
                         description={this.state.sideMenu.description}
                         handleClose={() => {
                             this.setState(prevState => ({sideMenu: {...prevState.sideMenu, showed: false}}))

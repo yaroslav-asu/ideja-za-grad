@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import './MarkerDescription.scss'
 import axios from "../../axios";
 import ComponentsSlider from "../ComponentsSlider/ComponentsSlider";
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 export type markerImage = {
     id: number,
@@ -11,9 +12,9 @@ export type markerImage = {
 export default function MarkerDescription(props: {
     type: string,
     description: string,
-    style?: Object,
     handleClose: Function,
     markerId: number,
+    additionalClass: string,
 }) {
     const [images, setImages] = useState(Array<markerImage>)
 
@@ -25,8 +26,10 @@ export default function MarkerDescription(props: {
         })
     }, [props.markerId]);
 
-    return <div className="side_menu" style={props.style}>
-        <button onClick={() => props.handleClose()}>Close</button>
+    return <div className={"marker_description " + props.additionalClass}>
+        <button className="close_button" onClick={() => props.handleClose()}>
+            <ArrowForwardIosIcon/>
+        </button>
         <h1>{props.type}</h1>
         <ComponentsSlider
             elements={images.map(image => {

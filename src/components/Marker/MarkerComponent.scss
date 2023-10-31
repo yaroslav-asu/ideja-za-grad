@@ -1,5 +1,8 @@
 .marker {
-  background-color: red;
-  padding: 20px;
+  $size: 50px;
   cursor: pointer;
+  background-image: url('https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678111-map-marker-512.png');
+  width: $size;
+  height: $size;
+  background-size: $size $size;
 }

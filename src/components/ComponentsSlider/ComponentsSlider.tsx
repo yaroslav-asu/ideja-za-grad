@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from "react";
 import "./ComponentsSlider.scss"
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 const ComponentsSlider = (
     props: { elements: Array<React.ReactElement> }
@@ -23,7 +25,7 @@ const ComponentsSlider = (
             }}
             disabled={currentComponentId <= 0}
         >
-            Prev
+            <ArrowBackIosNewIcon/>
         </button>
         nextButton = <button
             className={"nav_button"}
@@ -34,14 +36,16 @@ const ComponentsSlider = (
             }}
             disabled={currentComponentId + 1 >= props.elements.length}
         >
-            Next
+            <ArrowForwardIosIcon/>
         </button>
     }
 
     return (
         <div className={"components_slider"}>
             {prevButton}
-            {props.elements[currentComponentId]}
+            <div className="slide_wrapper">
+                {props.elements[currentComponentId]}
+            </div>
             {nextButton}
         </div>
     )

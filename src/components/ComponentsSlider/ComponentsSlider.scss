@@ -2,8 +2,31 @@
   display: flex;
   justify-content: space-between;
   width: 100%;
+  gap: 20px;
 
   .nav_button {
     align-self: center;
+    display: flex;
+    background: none;
+    border: none;
+    cursor: pointer;
+
+    &:disabled {
+      cursor: default;
+      opacity: 0.5;
+    }
+  }
+
+  .slide_wrapper {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
   }
 }
