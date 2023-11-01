@@ -12,8 +12,12 @@
     display: flex;
 
     &__left {
-      .logo_image {
-        height: 100%;
+      .logo {
+        width: 30px;
+
+        .logo_image {
+          max-width: 100%;
+        }
       }
     }
 

@@ -7,7 +7,16 @@
     position: relative;
     width: 100dvw;
     flex-grow: 1;
-
+    @media (max-width: 1000px) {
+      .marker_description {
+        width: 50vw;
+      }
+    }
+    @media (max-width: 600px) {
+      .marker_description {
+        width: 100vw;
+      }
+    }
 
     .wrapper {
       width: 100%;
@@ -29,4 +38,5 @@
       transition: width $animation-speed ease;
     }
   }
+
 }
