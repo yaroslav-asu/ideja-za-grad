@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import './App.scss';
 import 'mapbox-gl/dist/mapbox-gl.css'
 import {MapComponent} from "./components/Map/Map";
@@ -87,11 +87,13 @@ const App = () => {
         coords: [0, 0]
     })
     const [map, changeMap] = React.useState<Map | null>(null)
+    const mounted = useRef(false)
     React.useEffect(() => {
-        if (types.length === 0)
+        if (types.length === 0 && !mounted.current) {
             getTypes().then(res => {
-                changeTypes(prevTypes => [...prevTypes, ...res])
+                changeTypes(res)
             })
+        }
         if (markers.length === 0 && types.length > 0)
             getMarkers().then(res => {
                 for (let markerProps of res) {
@@ -112,7 +114,9 @@ const App = () => {
                     changeMarkers((prevMarkers) => [...prevMarkers, newMarker])
                 }
             })
+        mounted.current = true
     }, [markers, types])
+
     React.useEffect(() => {
         if (map !== null && markers.length > 0) {
             renderMarkers(map, markers)
@@ -127,6 +131,7 @@ const App = () => {
                     description: string,
                     images: Array<File>
                 }) => {
+                    console.log(data)
                     changeNewMarker({
                         ...newMarker,
                         ...data
