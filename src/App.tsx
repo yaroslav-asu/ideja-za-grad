@@ -3,215 +3,177 @@ import './App.scss';
 import 'mapbox-gl/dist/mapbox-gl.css'
 import {MapComponent} from "./components/Map/Map";
 import CreateMarkerMenu from "./components/CreateMarkerMenu/CreateMarkerMenu";
-import {MarkerComponent, markerPropsType} from "./components/Marker/MarkerComponent";
+import {MarkerComponent} from "./components/Marker/MarkerComponent";
 import {Map} from "mapbox-gl";
 import MarkerDescription from "./components/MarkerDescription/MarkerDescription";
 import markerType from "./types/markerTypes";
 import axios from "./axios";
 
 type createMenuMarkerType = {
-    coords: [number, number],
     type: string,
     description: string,
     images: File[],
+    coords: [number, number]
+}
+const getTypes = async () => {
+    return await axios.get("types").then(res => {
+        return res.data.data.map((type: { id: number, title: string }) => {
+            return {
+                title: type.title,
+                value: type.id.toString()
+            }
+        })
+    }).catch(err => {
+        console.log(err)
+        return []
+    })
 }
 
-class App extends React.Component<{}, {
-    createMarkerMenuShowed: boolean,
-    sideMenu: {
-        showed: boolean,
-        markerId: number,
-        type: string,
-        description: string
-    }
-    screen: {
-        width: number,
-        height: number
-    },
-    createMenuMarker: createMenuMarkerType,
-    types: { title: string, value: string }[]
-}> {
-    private markers: MarkerComponent[] = [];
-    private mapRef = React.createRef<Map>();
-
-    constructor(props: {}) {
-        super(props);
-        this.state = {
-            createMarkerMenuShowed: false,
-            sideMenu: {
-                showed: false,
-                markerId: 0,
-                type: '',
-                description: ''
-            },
-            createMenuMarker: {
-                coords: [0, 0],
-                type: '',
-                description: '',
-                images: []
-            },
-            screen: {
-                width: window.innerWidth,
-                height: window.innerHeight
-            },
-            types: []
-        }
-        this.render = this.render.bind(this);
-    }
-
-    handleScreenResize() {
-        this.setState({
-            screen: {width: window.innerWidth, height: window.innerHeight}
-        })
-    }
-
-    async componentDidMount() {
-        this.renderMarkers()
-        window.addEventListener('resize', () => this.handleScreenResize())
-        this.handleScreenResize()
-        this.setState(
-            {
-                types: await this.getTypes(),
+const getMarkers = async () => {
+    return axios.get(`markers`).then(res => {
+        return res.data.data.map((marker: {
+            id: number,
+            coords: { lat: number, lng: number },
+            type: { id: number, title: string },
+            description: string
+        }) => {
+            return {
+                id: marker.id,
+                coords: [marker.coords.lat, marker.coords.lng],
+                type: marker.type.id.toString(),
+                description: marker.description
             }
-        )
-        this.getMarkers().then(() => {
-            this.renderMarkers()
         })
-        this.renderMarkers()
+    }).catch(err => {
+        console.log(err)
+        return []
+    })
+}
+const saveMarker = async (marker: createMenuMarkerType) => {
+    let formData = new FormData()
+    formData.append('type', marker.type)
+    formData.append('description', marker.description)
+    formData.append('lat', JSON.stringify(marker.coords[0]))
+    formData.append('lng', JSON.stringify(marker.coords[1]))
+    for (let image of marker.images) {
+        formData.append('images', image)
     }
+    return await axios.post("markers", formData).then(res => {
+        return res.data.data
+    }).catch(err => {
+        console.log(err)
+        return 0
+    })
+}
+const renderMarkers = (map: Map, markers: Array<MarkerComponent>) => {
+    for (let marker of markers) {
+        marker.addTo(map)
+    }
+}
+const App = () => {
+    const [createMarkerMenuShowed, changeCreateMarkerMenuVisibility] = React.useState(false)
+    const [markers, changeMarkers] = React.useState<MarkerComponent[]>([])
+    const [types, changeTypes] = React.useState<markerType[]>([])
+    const [sideMenu, changeSideMenu] = React.useState({
+        showed: false,
+        markerId: 0,
+        type: {title: '', value: ''},
+        description: ''
+    })
+    const [newMarker, changeNewMarker] = React.useState<createMenuMarkerType>({
+        type: '',
+        description: '',
+        images: [],
+        coords: [0, 0]
+    })
+    const [map, changeMap] = React.useState<Map | null>(null)
+    React.useEffect(() => {
+        if (types.length === 0)
+            getTypes().then(res => {
+                changeTypes(prevTypes => [...prevTypes, ...res])
+            })
+        if (markers.length === 0 && types.length > 0)
+            getMarkers().then(res => {
+                for (let markerProps of res) {
+                    let newMarker = new MarkerComponent(markerProps)
+                    const type = types.find(type => type.value === markerProps.type)
+                    newMarker.type = type as markerType
 
-    async getTypes() {
-        return await axios.get("types").then(res => {
-            return res.data.data.map((type: { id: number, title: string }) => {
-                return {
-                    title: type.title,
-                    value: type.id.toString()
+                    newMarker.getElement().addEventListener('click', e => {
+                        changeSideMenu({
+                            type: type as markerType,
+                            description: newMarker.description,
+                            showed: true,
+                            markerId: newMarker.id
+                        })
+                        changeCreateMarkerMenuVisibility(false)
+                        e.stopPropagation()
+                    })
+                    changeMarkers((prevMarkers) => [...prevMarkers, newMarker])
                 }
             })
-        }).catch(err => {
-            console.log(err)
-            return []
-        })
-    }
-
-    async getMarkers() {
-        return axios.get(`markers`).then(res => {
-            for (let marker of res.data.data) {
-                this.createMarker({
-                    id: marker.id,
-                    coords: [marker.coords.lat, marker.coords.lng],
-                    type: marker.type.id.toString(),
-                    description: marker.description
-                })
-            }
-        }).catch(err => {
-            console.log(err)
-        })
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener('resize', () => this.handleScreenResize())
-    }
-
-    renderMarkers() {
-        for (let marker of this.markers) {
-            marker.addTo(this.mapRef.current as Map)
+    }, [markers, types])
+    React.useEffect(() => {
+        if (map !== null && markers.length > 0) {
+            renderMarkers(map, markers)
         }
-    }
-
-    async saveMarker(props: createMenuMarkerType): Promise<markerPropsType> {
-        let formData = new FormData()
-        formData.append('type', props.type)
-        formData.append('description', props.description)
-        formData.append('lat', JSON.stringify(props.coords[0]))
-        formData.append('lng', JSON.stringify(props.coords[1]))
-        for (let image of props.images) {
-            formData.append('images', image)
-        }
-        return await axios.post("markers", formData).then(res => {
-            console.log(res)
-            return res.data.data
-        }).catch(err => {
-            console.log(err)
-            return 0
-        })
-    }
-
-    createMarker(props: markerPropsType) {
-        let marker = new MarkerComponent(props)
-        marker.getElement().addEventListener('click', e => {
-            const type = this.state.types.find(type => type.value === marker.type) as markerType
-            this.setState(() => ({
-                sideMenu: {
-                    type: type.title,
-                    description: marker.description,
-                    showed: true,
-                    markerId: marker.id
-                },
-                createMarkerMenuShowed: false
-            }))
-            e.stopPropagation()
-        })
-        this.markers.push(marker)
-    }
-
-    render() {
-        return (
-            <div className="App">
-                {this.state.createMarkerMenuShowed && this.state.types.length > 0 ? <CreateMarkerMenu
-                    types={this.state.types}
-                    changeData={(data: { type: string, description: string, images: Array<File> }) => {
-                        this.setState({
-                            createMenuMarker: {
-                                ...this.state.createMenuMarker,
-                                type: data.type,
-                                description: data.description,
-                                images: data.images
-                            }
+    }, [map, markers])
+    return (
+        <div className="App">
+            {createMarkerMenuShowed && types.length > 0 ? <CreateMarkerMenu
+                types={types}
+                changeData={(data: {
+                    type: string,
+                    description: string,
+                    images: Array<File>
+                }) => {
+                    changeNewMarker({
+                        ...newMarker,
+                        ...data
+                    })
+                }}
+                onSave={async () => {
+                    changeCreateMarkerMenuVisibility(false)
+                    await saveMarker({...newMarker})
+                    renderMarkers(map as Map, markers)
+                }}
+                onClose={() => {
+                    changeCreateMarkerMenuVisibility(false)
+                }}
+            /> : null}
+            <div className="wrapper">
+                <MapComponent
+                    map={map}
+                    changeMap={changeMap}
+                    onClick={(e: any) => {
+                        changeCreateMarkerMenuVisibility(false)
+                        setTimeout(() => {
+                            changeCreateMarkerMenuVisibility(true)
+                            changeNewMarker({
+                                ...newMarker,
+                                coords: [e.lngLat.lng, e.lngLat.lat]
+                            })
                         })
                     }}
-                    onSave={async () => {
-                        this.setState({createMarkerMenuShowed: false})
-                        await this.saveMarker({...this.state.createMenuMarker})
-                        this.renderMarkers()
+                    closeMenu={() => {
+                        changeCreateMarkerMenuVisibility(false)
                     }}
-                    onClose={() => {
-                        this.setState({createMarkerMenuShowed: false})
+                    startCoords={[20.457273, 44.787197]}
+                />
+                <MarkerDescription
+                    markerId={sideMenu.markerId}
+                    type={sideMenu.type.title}
+                    additionalClass={'marker_description' + (sideMenu.showed ? '--showed' : '--hidden')}
+                    description={sideMenu.description}
+                    handleClose={() => {
+                        changeSideMenu({
+                            ...sideMenu,
+                            showed: false
+                        })
                     }}
-                /> : null}
-                <div className="wrapper">
-                    <MapComponent
-                        map={this.mapRef}
-                        onClick={(e: any) => {
-                            this.setState({createMarkerMenuShowed: false})
-                            setTimeout(() => {
-                                this.setState({
-                                    createMarkerMenuShowed: true,
-                                    createMenuMarker: {
-                                        ...this.state.createMenuMarker,
-                                        coords: [e.lngLat.lng, e.lngLat.lat],
-                                    },
-                                })
-                            })
-                        }}
-                        closeMenu={() => {
-                            this.setState({createMarkerMenuShowed: false})
-                        }}
-                        startCoords={[20.457273, 44.787197]}
-                    />
-                    <MarkerDescription
-                        markerId={this.state.sideMenu.markerId}
-                        type={this.state.sideMenu.type}
-                        additionalClass={'marker_description' + (this.state.sideMenu.showed ? '--showed' : '--hidden')}
-                        description={this.state.sideMenu.description}
-                        handleClose={() => {
-                            this.setState(prevState => ({sideMenu: {...prevState.sideMenu, showed: false}}))
-                        }}
-                    />
-                </div>
+                />
             </div>
-        )
-    }
+        </div>
+    )
 }
-
 export default App;

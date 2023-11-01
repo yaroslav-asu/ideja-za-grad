@@ -21,7 +21,7 @@ const CreateMarkerMenu = (props: {
             </button>
             <select
                 className="menu_element"
-                value={props.types[0] as unknown as string}
+                value={type as string}
                 onChange={e => {
                     changeType(e.target.value)
                     props.changeData({type: e.target.value, images, description})

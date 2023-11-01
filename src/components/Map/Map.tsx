@@ -6,14 +6,15 @@ export const MapComponent = (props: {
     onClick: Function,
     closeMenu: Function,
     startCoords: [number, number],
-    map: React.MutableRefObject<Map | null>
+    map: Map | null,
+    changeMap: Function
 }) => {
     const mapContainer = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (props.map.current) return
+        if (props.map) return
         if (mapContainer.current) {
-            props.map.current = new Map({
+            const map = new Map({
                 container: mapContainer?.current,
                 style: 'mapbox://styles/mapbox/streets-v12',
                 pitchWithRotate: false,
@@ -22,7 +23,8 @@ export const MapComponent = (props: {
                 accessToken: process.env.REACT_APP_MAPBOX_TOKEN || "",
                 doubleClickZoom: false
             })
-            props.map.current?.on('click', e => props.onClick(e))
+            map.on('click', e => props.onClick(e))
+            props.changeMap(map)
         }
     }, [props]);
 

@@ -4,13 +4,13 @@ import './MarkerComponent.scss'
 export type markerPropsType = {
     id: number,
     coords: [number, number],
-    type: string,
+    type: { title: string, value: string },
     description: string
 }
 
 export class MarkerComponent extends mapboxgl.Marker {
     public coords: [number, number];
-    public type: string;
+    public type: { title: string, value: string };
     public description: string;
     public id: number;
 
