@@ -15,7 +15,7 @@ const CreateMarkerMenu = (props: {
     const [description, changeDescription] = React.useState('')
 
     return (
-        <div className="create_marker_menu">
+        <form className="create_marker_menu" onSubmit={e => {e.preventDefault()}}>
             <button className="close_button" onClick={() => props.onClose()}>
                 <CloseIcon/>
             </button>
@@ -46,7 +46,7 @@ const CreateMarkerMenu = (props: {
                 props.changeData({type, description: e.target.value, images})
             }}/>
             <button className="menu_element" onClick={() => props.onSave()}>Save</button>
-        </div>
+        </form>
     )
 }
 
