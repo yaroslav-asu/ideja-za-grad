@@ -165,7 +165,7 @@ const App = () => {
                     closeMenu={() => {
                         changeCreateMarkerMenuVisibility(false)
                     }}
-                    startCoords={[20.457273, 44.787197]}
+                    startCoords={[20.4563811, 44.8014948]}
                 />
                 <MarkerDescription
                     markerId={sideMenu.markerId}
