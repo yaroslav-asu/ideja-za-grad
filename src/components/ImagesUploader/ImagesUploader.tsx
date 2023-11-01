@@ -48,11 +48,11 @@ const ImagesUploader = (props: {
                             img.src = e.target?.result as string;
                             img.onload = () => {
                                 if (!(img.width / img.height < 20 && img.height / img.width < 20)) {
-                                    toast.error(t("notifications.images.narrow"))
+                                    toast.error(t("images.narrow"))
                                     return
                                 }
                                 if (uploadedFile.size > 5000000) {
-                                    toast.error(t("notifications.images.big"))
+                                    toast.error(t("images.big"))
                                     return
                                 }
                                 changeFiles([...files, uploadedFile])

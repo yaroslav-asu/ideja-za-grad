@@ -35,7 +35,7 @@ const CreateMarkerMenu = (props: {
                     }}
                 >
                     {props.types.map((type, index) => {
-                        return <option key={index} value={type.value}>{type.title}</option>
+                        return <option key={index} value={type.value}>{t(`types.${type.title}`)}</option>
                     })}
                 </select>
             </div>
