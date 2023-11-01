@@ -7,5 +7,9 @@
   },
   "imagesUploader": {
     "uploadImage": "Upload image"
+  },
+  "types": {
+    "first": "First type",
+    "second": "Second type"
   }
 }

@@ -7,5 +7,9 @@
   },
   "imagesUploader": {
     "uploadImage": "Učitaj sliku"
+  },
+  "types": {
+    "first": "Prvi tip",
+    "second": "Drugi tip"
   }
 }

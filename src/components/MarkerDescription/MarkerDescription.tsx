@@ -3,6 +3,7 @@ import './MarkerDescription.scss'
 import axios from "../../axios";
 import ComponentsSlider from "../ComponentsSlider/ComponentsSlider";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import {useTranslation} from "react-i18next";
 
 export type markerImage = {
     id: number,
@@ -17,6 +18,7 @@ const MarkerDescription = (props: {
     additionalClass: string,
 }) => {
     const [images, setImages] = useState(Array<markerImage>)
+    const {t} = useTranslation();
 
     useEffect(() => {
         axios.get(`markers/${props.markerId}/images`).then((res) => {
@@ -44,7 +46,7 @@ const MarkerDescription = (props: {
             <ArrowForwardIosIcon/>
         </button>
         <div className="content_wrapper">
-            <h1>{props.type}</h1>
+            <h1>{t(`types.${props.type}`)}</h1>
             {imagesSlider}
             <p>{props.description}</p>
         </div>

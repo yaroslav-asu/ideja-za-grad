@@ -31,9 +31,6 @@ i18next.use(initReactI18next).use(LanguageDetector).init({
         rs: {
             translation: rs
         },
-        'RU-ru': {
-            translation: ru
-        },
 
     },
 })

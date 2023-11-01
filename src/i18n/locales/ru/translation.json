@@ -7,5 +7,9 @@
   },
   "imagesUploader": {
     "uploadImage": "Загрузить изображение"
+  },
+  "types": {
+    "first": "Первый тип",
+    "second": "Второй тип"
   }
 }
