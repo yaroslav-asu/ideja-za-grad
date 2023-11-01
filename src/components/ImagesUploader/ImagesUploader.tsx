@@ -3,13 +3,15 @@ import ComponentsSlider from "../ComponentsSlider/ComponentsSlider";
 import './ImagesUploader.scss'
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
 import DeletableImage from "./DeletableImage/DeletableImage";
+import {useTranslation} from "react-i18next";
 
 const ImagesUploader = (props: {
     onUpdate: Function
 }) => {
     const [files, changeFiles] = React.useState<Array<File>>([])
     const [srcs, changeSrcs] = React.useState<Array<string>>([])
-    let componentsSlider
+    const {t} = useTranslation()
+    let componentsSlider, uploader;
 
     if (files.length !== 0) {
         componentsSlider = <ComponentsSlider elements={srcs.map(
@@ -26,10 +28,10 @@ const ImagesUploader = (props: {
             }
         )}/>
     }
-
-    return (
-        <div className="images_uploader">
-            {files.length < 5 ? <button className="upload_button menu_element">
+    if (files.length < 5) {
+        uploader = <div className="uploader_wrapper">
+            <p>{t("imagesUploader.uploadImage")}</p>
+            <button className="upload_button menu_element">
                 <AddPhotoAlternateOutlinedIcon/>
                 <input
                     className="image_input"
@@ -47,8 +49,12 @@ const ImagesUploader = (props: {
                         props.onUpdate([...files, uploadedFile])
                     }}
                 />
-            </button> : null}
-
+            </button>
+        </div>
+    }
+    return (
+        <div className="images_uploader">
+            {uploader}
             {componentsSlider}
         </div>
     )

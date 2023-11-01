@@ -1,2 +1,11 @@
 {
+  "createMarkerMenu": {
+    "title": "Создать новое оповещение о проблеме",
+    "save": "Сохранить",
+    "description": "Описание",
+    "type": "Тип задачи"
+  },
+  "imagesUploader": {
+    "uploadImage": "Загрузить изображение"
+  }
 }

@@ -6,12 +6,24 @@
   border-radius: 10px;
   z-index: 10000;
   background-color: white;
-  gap: 10px;
+  gap: 15px;
   max-width: 400px;
   border: 1px solid #9d9d9d;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+  text-align: center;
+
+  .type_select_wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: start;
+
+    .type_select {
+      flex-grow: 1;
+    }
+  }
 
   .menu_element {
     background: none;

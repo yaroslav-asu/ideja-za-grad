@@ -8,6 +8,7 @@ import {Map} from "mapbox-gl";
 import MarkerDescription from "./components/MarkerDescription/MarkerDescription";
 import markerType from "./types/markerTypes";
 import axios from "./axios";
+import LanguageSwitcher from "./components/LanguageSwitcher/LanguageSwitcher";
 
 type createMenuMarkerType = {
     type: string,
@@ -124,6 +125,7 @@ const App = () => {
     }, [map, markers])
     return (
         <div className="App">
+            <LanguageSwitcher/>
             {createMarkerMenuShowed && types.length > 0 ? <CreateMarkerMenu
                 types={types}
                 changeData={(data: {

@@ -1,2 +1,11 @@
 {
+  "createMarkerMenu": {
+    "title": "Create new issue",
+    "save": "Save",
+    "description": "Description",
+    "type": "Issue type"
+  },
+  "imagesUploader": {
+    "uploadImage": "Upload image"
+  }
 }

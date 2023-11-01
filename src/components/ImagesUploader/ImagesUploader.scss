@@ -3,6 +3,12 @@
   flex-direction: column;
   gap: 10px;
 
+  .uploader_wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
   .upload_button {
     $color: rgba(#0d0f37, 1);
     position: relative;

@@ -7,8 +7,12 @@ import rs from "./locales/rs/translation.json"
 
 
 i18next.use(initReactI18next).use(LanguageDetector).init({
+    detection: {
+        order: ['querystring', 'cookie', 'localStorage', 'sessionStorage', 'navigator', 'htmlTag', 'path', 'subdomain'],
+        lookupQuerystring: 'lng',
+        caches: ['localStorage', 'cookie'],
+    },
     debug: true,
-    lng: "en",
     fallbackLng: "en",
     direction: {
         order: ['cookie']
@@ -26,8 +30,11 @@ i18next.use(initReactI18next).use(LanguageDetector).init({
         },
         rs: {
             translation: rs
-        }
+        },
+        'RU-ru': {
+            translation: ru
+        },
+
     },
 })
-console.log(i18next)
 export default i18next;

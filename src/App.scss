@@ -16,3 +16,14 @@ $animation-speed: 0.5s;
 .side_menu {
   transition: width $animation-speed ease;
 }
+
+.language_switcher {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  padding: 1rem;
+  background-color: white;
+  border: none;
+  border-radius: 0 0 15px 0;
+}
