@@ -9,7 +9,13 @@
     "uploadImage": "Загрузить изображение"
   },
   "types": {
-    "first": "Первый тип",
-    "second": "Второй тип"
+    "natural": "Зеленые насаждения",
+    "transport": "Транспрт",
+    "architecture": "Архитектура и наследние",
+    "walkability": "Пешеходная доступность",
+    "bike_infrastructure": "Велоинфраструктура",
+    "playgrounds": "Детские площадки",
+    "accessibility": "Доступность при инвалидности",
+    "pets_infrastructure": "Инфраструктура для животных"
   }
 }

@@ -89,6 +89,11 @@ const App = () => {
     })
     const [map, changeMap] = React.useState<Map | null>(null)
     const mounted = useRef(false)
+    const inactiveAllMarkers = () => {
+        for (let marker of document.getElementsByClassName('marker--active') as any) {
+            marker.classList.remove('marker--active')
+        }
+    }
     React.useEffect(() => {
         if (types.length === 0 && !mounted.current) {
             getTypes().then(res => {
@@ -98,15 +103,21 @@ const App = () => {
         if (markers.length === 0 && types.length > 0)
             getMarkers().then(res => {
                 for (let markerProps of res) {
-                    let newMarker = new MarkerComponent(markerProps)
                     const type = types.find(type => type.value === markerProps.type)
-                    newMarker.type = type as markerType
 
-                    newMarker.getElement().addEventListener('click', e => {
+                    const newMarker = new MarkerComponent({...markerProps, type: type as markerType})
+                    const markerElement = newMarker.getElement()
+
+                    markerElement.addEventListener('click', e => {
+                        let isActive = markerElement.classList.contains('marker--active')
+                        inactiveAllMarkers()
+                        if (!isActive) {
+                            markerElement.classList.add('marker--active')
+                        }
                         changeSideMenu({
                             type: type as markerType,
                             description: newMarker.description,
-                            showed: true,
+                            showed: !isActive,
                             markerId: newMarker.id
                         })
                         changeCreateMarkerMenuVisibility(false)
@@ -133,7 +144,6 @@ const App = () => {
                     description: string,
                     images: Array<File>
                 }) => {
-                    console.log(data)
                     changeNewMarker({
                         ...newMarker,
                         ...data
@@ -173,6 +183,7 @@ const App = () => {
                     additionalClass={'marker_description' + (sideMenu.showed ? '--showed' : '--hidden')}
                     description={sideMenu.description}
                     handleClose={() => {
+                        inactiveAllMarkers()
                         changeSideMenu({
                             ...sideMenu,
                             showed: false

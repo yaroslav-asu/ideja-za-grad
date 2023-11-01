@@ -9,7 +9,13 @@
     "uploadImage": "Upload image"
   },
   "types": {
-    "first": "First type",
-    "second": "Second type"
+    "natural": "Green vegetation",
+    "transport": "Transport",
+    "architecture": "Architecture and heritage",
+    "walkability": "Walkability",
+    "bike_infrastructure": "Bike infrastructure",
+    "playgrounds": "Playgrounds",
+    "accessibility": "Disability accessibility",
+    "pets_infrastructure": "Pets infrastructure"
   }
 }

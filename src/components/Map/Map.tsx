@@ -1,5 +1,6 @@
 import React, {useEffect, useRef} from 'react';
 import {Map} from 'mapbox-gl';
+import "./Map.scss"
 
 
 export const MapComponent = (props: {

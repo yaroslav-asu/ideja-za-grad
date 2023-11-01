@@ -1,8 +1,30 @@
+$size: 40px;
+
+
 .marker {
-  $size: 50px;
   cursor: pointer;
-  background-image: url('https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678111-map-marker-512.png');
   width: $size;
-  height: $size;
   background-size: $size $size;
+  transition: width 0.15s ease-in-out;
+
+  .marker_image {
+    width: 100%;
+    height: 100%;
+  }
+
+  .marker_type {
+    position: absolute;
+    left: 50%;
+    top: 35%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+  }
+
+  &--active {
+    $size: 60px;
+    width: $size;
+    background-size: $size $size;
+    z-index: 1;
+  }
 }
+

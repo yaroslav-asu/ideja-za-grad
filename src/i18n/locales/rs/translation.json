@@ -9,7 +9,13 @@
     "uploadImage": "Učitaj sliku"
   },
   "types": {
-    "first": "Prvi tip",
-    "second": "Drugi tip"
+    "natural": "Зелена насеља",
+    "transport": "Транспорт",
+    "architecture": "Архитектура и наслеђе",
+    "walkability": "Пешачка доступност",
+    "bike_infrastructure": "Инфраструктура за бицикле",
+    "playgrounds": "Дечја игралишта",
+    "accessibility": "Приступачност за особе са инвалидитетом",
+    "pets_infrastructure": "Инфраструктура за кућне љубимце"
   }
 }
