@@ -22,5 +22,9 @@
     "saved": "Ваш предлог ће бити примљен од нашег тима и ускоро ће се појавити на мапи.",
     "saveError": "Дошло је до проблема при чувању вашег предлога, молимо покушајте поново касније.",
     "gettingDataError": "Дошло је до грешке при добављању података, молимо покушајте поново касније."
+  },
+  "images": {
+    "narrow": "Vaša slika je previše uska. Molimo vas da otpremite širu sliku.",
+    "big": "Vaša slika je previše velika. Molimo vas da otpremite manju sliku."
   }
 }

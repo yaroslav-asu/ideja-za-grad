@@ -4,6 +4,7 @@ import './ImagesUploader.scss'
 import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
 import DeletableImage from "./DeletableImage/DeletableImage";
 import {useTranslation} from "react-i18next";
+import {toast} from "react-toastify";
 
 const ImagesUploader = (props: {
     onUpdate: Function
@@ -36,15 +37,28 @@ const ImagesUploader = (props: {
                 <input
                     className="image_input"
                     type="file"
-                    accept="image/*"
+                    accept="image/jpg, image/png, image/jpeg, image/wepb, image/JPG"
                     onChange={(e) => {
                         const uploadedFile = e.target.files![0];
-                        changeFiles([...files, uploadedFile])
 
                         const reader = new FileReader();
                         reader.readAsDataURL(uploadedFile);
                         reader.onload = function (e) {
-                            changeSrcs([...srcs, e.target?.result as string])
+                            const img = new Image();
+                            img.src = e.target?.result as string;
+                            img.onload = () => {
+                                if (!(img.width / img.height < 20 && img.height / img.width < 20)) {
+                                    toast.error(t("notifications.images.narrow"))
+                                    return
+                                }
+                                if (uploadedFile.size > 5000000) {
+                                    toast.error(t("notifications.images.big"))
+                                    return
+                                }
+                                changeFiles([...files, uploadedFile])
+                                changeSrcs([...srcs, e.target?.result as string])
+
+                            }
                         };
                         props.onUpdate([...files, uploadedFile])
                     }}

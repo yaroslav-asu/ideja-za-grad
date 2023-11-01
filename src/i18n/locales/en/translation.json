@@ -21,6 +21,10 @@
   "notifications": {
     "saved": "Your issue will be reviewed by our team and published soon.",
     "saveError": "There was an error saving your issue. Please try again later.",
-    "gettingDataError": "There was an error getting data from the server. Please try again later."
+    "gettingDataError": "There was an error getting data from the server. Please try again later.",
+    "images": {
+      "narrow": "Your picture too narrow. Please upload a wider picture.",
+      "big": "Your picture too big. Please upload a smaller picture."
+    }
   }
 }
