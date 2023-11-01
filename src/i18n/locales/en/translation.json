@@ -17,5 +17,10 @@
     "playgrounds": "Playgrounds",
     "accessibility": "Disability accessibility",
     "pets_infrastructure": "Pets infrastructure"
+  },
+  "notifications": {
+    "saved": "Your issue will be reviewed by our team and published soon.",
+    "saveError": "There was an error saving your issue. Please try again later.",
+    "gettingDataError": "There was an error getting data from the server. Please try again later."
   }
 }

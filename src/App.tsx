@@ -9,6 +9,9 @@ import MarkerDescription from "./components/MarkerDescription/MarkerDescription"
 import markerType from "./types/markerTypes";
 import axios from "./axios";
 import LanguageSwitcher from "./components/LanguageSwitcher/LanguageSwitcher";
+import {ToastContainer, toast} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import {useTranslation} from "react-i18next";
 
 type createMenuMarkerType = {
     type: string,
@@ -26,6 +29,7 @@ const getTypes = async () => {
         })
     }).catch(err => {
         console.log(err)
+
         return []
     })
 }
@@ -89,15 +93,19 @@ const App = () => {
     })
     const [map, changeMap] = React.useState<Map | null>(null)
     const mounted = useRef(false)
-    const inactiveAllMarkers = () => {
+    const {t} = useTranslation()
+    const deactivateAllMarkers = () => {
         for (let marker of document.getElementsByClassName('marker--active') as any) {
             marker.classList.remove('marker--active')
         }
     }
     React.useEffect(() => {
+
         if (types.length === 0 && !mounted.current) {
             getTypes().then(res => {
                 changeTypes(res)
+            }).catch(() => {
+                toast.error(t('notifications.gettingDataError'));
             })
         }
         if (markers.length === 0 && types.length > 0)
@@ -110,7 +118,7 @@ const App = () => {
 
                     markerElement.addEventListener('click', e => {
                         let isActive = markerElement.classList.contains('marker--active')
-                        inactiveAllMarkers()
+                        deactivateAllMarkers()
                         if (!isActive) {
                             markerElement.classList.add('marker--active')
                         }
@@ -125,6 +133,8 @@ const App = () => {
                     })
                     changeMarkers((prevMarkers) => [...prevMarkers, newMarker])
                 }
+            }).catch(() => {
+                toast.error(t('notifications.gettingDataError'));
             })
         mounted.current = true
     }, [markers, types])
@@ -136,6 +146,18 @@ const App = () => {
     }, [map, markers])
     return (
         <div className="App">
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
             <LanguageSwitcher/>
             {createMarkerMenuShowed && types.length > 0 ? <CreateMarkerMenu
                 types={types}
@@ -151,7 +173,11 @@ const App = () => {
                 }}
                 onSave={async () => {
                     changeCreateMarkerMenuVisibility(false)
-                    await saveMarker({...newMarker})
+                    await saveMarker({...newMarker}).then(() => {
+                        toast.success(t('notifications.saved'));
+                    }).catch(() => {
+                        toast.error(t('notifications.saveError'));
+                    })
                     renderMarkers(map as Map, markers)
                 }}
                 onClose={() => {
@@ -183,7 +209,7 @@ const App = () => {
                     additionalClass={'marker_description' + (sideMenu.showed ? '--showed' : '--hidden')}
                     description={sideMenu.description}
                     handleClose={() => {
-                        inactiveAllMarkers()
+                        deactivateAllMarkers()
                         changeSideMenu({
                             ...sideMenu,
                             showed: false
