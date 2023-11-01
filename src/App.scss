@@ -1,10 +1,17 @@
 .app {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+
   .main {
     position: relative;
+    width: 100dvw;
+    flex-grow: 1;
+
 
     .wrapper {
-      height: calc(100dvh - 60px);
-      width: 100dvw;
+      width: 100%;
+      height: 100%;
       display: flex;
       position: relative;
       overflow: hidden;
@@ -20,19 +27,6 @@
 
     .side_menu {
       transition: width $animation-speed ease;
-    }
-
-    .language_switcher {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 1;
-      padding: 1rem;
-      background-color: white;
-      border: 1px solid #9d9d9d;
-      border-top: 0;
-      border-left: 0;
-      border-radius: 0 0 15px 0;
     }
   }
 }

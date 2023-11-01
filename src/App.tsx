@@ -8,7 +8,6 @@ import {Map} from "mapbox-gl";
 import MarkerDescription from "./components/MarkerDescription/MarkerDescription";
 import markerType from "./types/markerTypes";
 import axios from "./axios";
-import LanguageSwitcher from "./components/LanguageSwitcher/LanguageSwitcher";
 import {ToastContainer, toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import {useTranslation} from "react-i18next";
@@ -144,7 +143,7 @@ const App = () => {
         }
     }, [map, markers])
     return (
-        <div className="App">
+        <div className="app">
             <ToastContainer
                 position="top-right"
                 autoClose={5000}
@@ -159,7 +158,6 @@ const App = () => {
             />
             <Header/>
             <main className={"main"}>
-                <LanguageSwitcher/>
                 {createMarkerMenuShowed && types.length > 0 ? <CreateMarkerMenu
                     types={types}
                     changeData={(data: {

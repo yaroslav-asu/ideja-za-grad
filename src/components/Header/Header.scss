@@ -1,9 +1,29 @@
 .header {
-  height: 50px;
-  padding: 10px;
+  height: 30px;
+  padding: 5px;
   border-bottom: 1px solid #9d9d9d;
-box-sizing: content-box;
-  .logo_image {
+  box-sizing: content-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .header_part {
     height: 100%;
+    display: flex;
+
+    &__left {
+      .logo_image {
+        height: 100%;
+      }
+    }
+
+    &__right {
+      align-items: center;
+
+      .language_switcher {
+        background: none;
+        border: none;
+      }
+    }
   }
 }
