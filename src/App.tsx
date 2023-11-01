@@ -100,7 +100,6 @@ const App = () => {
         }
     }
     React.useEffect(() => {
-
         if (types.length === 0 && !mounted.current) {
             getTypes().then(res => {
                 changeTypes(res)
@@ -137,7 +136,7 @@ const App = () => {
                 toast.error(t('notifications.gettingDataError'));
             })
         mounted.current = true
-    }, [markers, types])
+    }, [markers, types, t])
 
     React.useEffect(() => {
         if (map !== null && markers.length > 0) {
