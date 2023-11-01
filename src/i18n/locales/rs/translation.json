@@ -1,2 +1,11 @@
 {
+  "createMarkerMenu": {
+    "title": "Kreirajte novu obaveštenje o problemu",
+    "save": "Sačuvaj",
+    "description": "Opis",
+    "type": "Vrsta obaveštenja"
+  },
+  "imagesUploader": {
+    "uploadImage": "Učitaj sliku"
+  }
 }
