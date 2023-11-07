@@ -26,5 +26,13 @@
       "narrow": "Your picture too narrow. Please upload a wider picture.",
       "big": "Your picture too big. Please upload a smaller picture."
     }
+  },
+  "howToUse": {
+    "howToUse": "How to use?",
+    "stages": {
+      "1": "Find the location on the map that you want to suggest for improvement and click on it.",
+      "2": "Fill out the form and click 'Save'.",
+      "3": "Once we review your suggestion, it will appear on the map."
+    }
   }
 }

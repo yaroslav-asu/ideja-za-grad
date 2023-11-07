@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import './App.scss';
 import 'mapbox-gl/dist/mapbox-gl.css'
 import {MapComponent} from "./components/Map/Map";
@@ -8,10 +8,12 @@ import {Map} from "mapbox-gl";
 import MarkerDescription from "./components/MarkerDescription/MarkerDescription";
 import markerType from "./types/markerTypes";
 import axios from "./axios";
-import LanguageSwitcher from "./components/LanguageSwitcher/LanguageSwitcher";
 import {ToastContainer, toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import {useTranslation} from "react-i18next";
+import Header from "./components/Header/Header";
+import HowToUsePopup from "./components/HowToUsePopup/HowToUsePopup";
+import howToUsePopup from "./components/HowToUsePopup/HowToUsePopup";
 
 type createMenuMarkerType = {
     type: string,
@@ -29,7 +31,6 @@ const getTypes = async () => {
         })
     }).catch(err => {
         console.log(err)
-
         return []
     })
 }
@@ -94,6 +95,7 @@ const App = () => {
     const [map, changeMap] = React.useState<Map | null>(null)
     const mounted = useRef(false)
     const {t} = useTranslation()
+    const [howToPopupState, changeHowToPopupState] = useState(false)
     const deactivateAllMarkers = () => {
         for (let marker of document.getElementsByClassName('marker--active') as any) {
             marker.classList.remove('marker--active')
@@ -143,8 +145,12 @@ const App = () => {
             renderMarkers(map, markers)
         }
     }, [map, markers])
+    let howToPopup = null
+    if (howToPopupState) {
+        howToPopup = <HowToUsePopup closePopup={() => changeHowToPopupState(false)}/>
+    }
     return (
-        <div className="App">
+        <div className="app">
             <ToastContainer
                 position="top-right"
                 autoClose={5000}
@@ -157,65 +163,68 @@ const App = () => {
                 pauseOnHover
                 theme="light"
             />
-            <LanguageSwitcher/>
-            {createMarkerMenuShowed && types.length > 0 ? <CreateMarkerMenu
-                types={types}
-                changeData={(data: {
-                    type: string,
-                    description: string,
-                    images: Array<File>
-                }) => {
-                    changeNewMarker({
-                        ...newMarker,
-                        ...data
-                    })
-                }}
-                onSave={async () => {
-                    changeCreateMarkerMenuVisibility(false)
-                    await saveMarker({...newMarker}).then(() => {
-                        toast.success(t('notifications.saved'));
-                    }).catch(() => {
-                        toast.error(t('notifications.saveError'));
-                    })
-                    renderMarkers(map as Map, markers)
-                }}
-                onClose={() => {
-                    changeCreateMarkerMenuVisibility(false)
-                }}
-            /> : null}
-            <div className="wrapper">
-                <MapComponent
-                    map={map}
-                    changeMap={changeMap}
-                    onClick={(e: any) => {
+            {howToPopup}
+            <Header openHowToPopup={() => changeHowToPopupState(true)}/>
+            <main className={"main"}>
+                {createMarkerMenuShowed && types.length > 0 ? <CreateMarkerMenu
+                    types={types}
+                    changeData={(data: {
+                        type: string,
+                        description: string,
+                        images: Array<File>
+                    }) => {
+                        changeNewMarker({
+                            ...newMarker,
+                            ...data
+                        })
+                    }}
+                    onSave={async () => {
                         changeCreateMarkerMenuVisibility(false)
-                        setTimeout(() => {
-                            changeCreateMarkerMenuVisibility(true)
-                            changeNewMarker({
-                                ...newMarker,
-                                coords: [e.lngLat.lng, e.lngLat.lat]
+                        await saveMarker({...newMarker}).then(() => {
+                            toast.success(t('notifications.saved'));
+                        }).catch(() => {
+                            toast.error(t('notifications.saveError'));
+                        })
+                        renderMarkers(map as Map, markers)
+                    }}
+                    onClose={() => {
+                        changeCreateMarkerMenuVisibility(false)
+                    }}
+                /> : null}
+                <div className="wrapper">
+                    <MapComponent
+                        map={map}
+                        changeMap={changeMap}
+                        onClick={(e: any) => {
+                            changeCreateMarkerMenuVisibility(false)
+                            setTimeout(() => {
+                                changeCreateMarkerMenuVisibility(true)
+                                changeNewMarker({
+                                    ...newMarker,
+                                    coords: [e.lngLat.lng, e.lngLat.lat]
+                                })
                             })
-                        })
-                    }}
-                    closeMenu={() => {
-                        changeCreateMarkerMenuVisibility(false)
-                    }}
-                    startCoords={[20.4563811, 44.8014948]}
-                />
-                <MarkerDescription
-                    markerId={sideMenu.markerId}
-                    type={sideMenu.type.title}
-                    additionalClass={'marker_description' + (sideMenu.showed ? '--showed' : '--hidden')}
-                    description={sideMenu.description}
-                    handleClose={() => {
-                        deactivateAllMarkers()
-                        changeSideMenu({
-                            ...sideMenu,
-                            showed: false
-                        })
-                    }}
-                />
-            </div>
+                        }}
+                        closeMenu={() => {
+                            changeCreateMarkerMenuVisibility(false)
+                        }}
+                        startCoords={[20.4563811, 44.8014948]}
+                    />
+                    <MarkerDescription
+                        markerId={sideMenu.markerId}
+                        type={sideMenu.type.title}
+                        additionalClass={'marker_description' + (sideMenu.showed ? '--showed' : '--hidden')}
+                        description={sideMenu.description}
+                        handleClose={() => {
+                            deactivateAllMarkers()
+                            changeSideMenu({
+                                ...sideMenu,
+                                showed: false
+                            })
+                        }}
+                    />
+                </div>
+            </main>
         </div>
     )
 }

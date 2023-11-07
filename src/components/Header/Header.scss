@@ -1,0 +1,40 @@
+.header {
+  height: 30px;
+  padding: 5px;
+  border-bottom: 1px solid #9d9d9d;
+  box-sizing: content-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .header_part {
+    height: 100%;
+    display: flex;
+    gap: 20px;
+
+    &__left {
+      .logo {
+        width: 30px;
+
+        .logo_image {
+          max-width: 100%;
+        }
+      }
+    }
+
+    &__right {
+      align-items: center;
+
+      .how_to_button {
+        background: none;
+        border: none;
+        cursor: pointer;
+      }
+
+      .language_switcher {
+        background: none;
+        border: none;
+      }
+    }
+  }
+}
