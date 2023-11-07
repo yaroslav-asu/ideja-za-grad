@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import './App.scss';
 import 'mapbox-gl/dist/mapbox-gl.css'
 import {MapComponent} from "./components/Map/Map";
@@ -12,6 +12,8 @@ import {ToastContainer, toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import {useTranslation} from "react-i18next";
 import Header from "./components/Header/Header";
+import HowToUsePopup from "./components/HowToUsePopup/HowToUsePopup";
+import howToUsePopup from "./components/HowToUsePopup/HowToUsePopup";
 
 type createMenuMarkerType = {
     type: string,
@@ -93,6 +95,7 @@ const App = () => {
     const [map, changeMap] = React.useState<Map | null>(null)
     const mounted = useRef(false)
     const {t} = useTranslation()
+    const [howToPopupState, changeHowToPopupState] = useState(false)
     const deactivateAllMarkers = () => {
         for (let marker of document.getElementsByClassName('marker--active') as any) {
             marker.classList.remove('marker--active')
@@ -142,6 +145,10 @@ const App = () => {
             renderMarkers(map, markers)
         }
     }, [map, markers])
+    let howToPopup = null
+    if (howToPopupState) {
+        howToPopup = <HowToUsePopup closePopup={() => changeHowToPopupState(false)}/>
+    }
     return (
         <div className="app">
             <ToastContainer
@@ -156,7 +163,8 @@ const App = () => {
                 pauseOnHover
                 theme="light"
             />
-            <Header/>
+            {howToPopup}
+            <Header openHowToPopup={() => changeHowToPopupState(true)}/>
             <main className={"main"}>
                 {createMarkerMenuShowed && types.length > 0 ? <CreateMarkerMenu
                     types={types}

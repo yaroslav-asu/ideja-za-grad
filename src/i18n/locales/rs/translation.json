@@ -26,5 +26,13 @@
   "images": {
     "narrow": "Vaša slika je previše uska. Molimo vas da otpremite širu sliku.",
     "big": "Vaša slika je previše velika. Molimo vas da otpremite manju sliku."
+  },
+  "howToUse": {
+    "howToUse": "Kako ovo koristiti",
+    "stages": {
+      "1": "Нађите на мапи место које желите предложити за унапређење и кликните на њега.",
+      "2": "Попуните формулар и кликните на 'Сачувај'.",
+      "3": "Када прегледамо ваш предлог, појавиће се на мапи."
+    }
   }
 }

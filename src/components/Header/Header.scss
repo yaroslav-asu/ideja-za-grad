@@ -10,6 +10,7 @@
   .header_part {
     height: 100%;
     display: flex;
+    gap: 20px;
 
     &__left {
       .logo {
@@ -23,6 +24,12 @@
 
     &__right {
       align-items: center;
+
+      .how_to_button {
+        background: none;
+        border: none;
+        cursor: pointer;
+      }
 
       .language_switcher {
         background: none;
