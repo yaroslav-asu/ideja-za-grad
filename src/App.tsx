@@ -13,7 +13,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import {useTranslation} from "react-i18next";
 import Header from "./components/Header/Header";
 import HowToUsePopup from "./components/HowToUsePopup/HowToUsePopup";
-import howToUsePopup from "./components/HowToUsePopup/HowToUsePopup";
 
 type createMenuMarkerType = {
     type: string,
