@@ -28,9 +28,6 @@ const getTypes = async () => {
                 value: type.id.toString()
             }
         })
-    }).catch(err => {
-        console.log(err)
-        return []
     })
 }
 
@@ -49,9 +46,6 @@ const getMarkers = async () => {
                 description: marker.description
             }
         })
-    }).catch(err => {
-        console.log(err)
-        return []
     })
 }
 const saveMarker = async (marker: createMenuMarkerType) => {
@@ -95,6 +89,10 @@ const App = () => {
     const mounted = useRef(false)
     const {t} = useTranslation()
     const [howToPopupState, changeHowToPopupState] = useState(false)
+    const [loadErr,] = useState(t('notifications.gettingDataError'))
+    const [saveErr,] = useState(t('notifications.saveError'))
+    const [saveSuccess,] = useState(t('notifications.saved'))
+
     const deactivateAllMarkers = () => {
         for (let marker of document.getElementsByClassName('marker--active') as any) {
             marker.classList.remove('marker--active')
@@ -105,7 +103,7 @@ const App = () => {
             getTypes().then(res => {
                 changeTypes(res)
             }).catch(() => {
-                toast.error(t('notifications.gettingDataError'));
+                toast.error(loadErr);
             })
         }
         if (markers.length === 0 && types.length > 0)
@@ -134,7 +132,7 @@ const App = () => {
                     changeMarkers((prevMarkers) => [...prevMarkers, newMarker])
                 }
             }).catch(() => {
-                toast.error(t('notifications.gettingDataError'));
+                toast.error(loadErr);
             })
         mounted.current = true
     }, [markers, types, t])
@@ -180,9 +178,9 @@ const App = () => {
                     onSave={async () => {
                         changeCreateMarkerMenuVisibility(false)
                         await saveMarker({...newMarker}).then(() => {
-                            toast.success(t('notifications.saved'));
+                            toast.success(saveSuccess);
                         }).catch(() => {
-                            toast.error(t('notifications.saveError'));
+                            toast.error(saveErr);
                         })
                         renderMarkers(map as Map, markers)
                     }}

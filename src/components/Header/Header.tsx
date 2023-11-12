@@ -1,4 +1,4 @@
-import React, {useEffect, useTransition} from "react";
+import React from "react";
 import Logo from "./Logo/Logo";
 import './Header.scss'
 import LanguageSwitcher from "../LanguageSwitcher/LanguageSwitcher";
