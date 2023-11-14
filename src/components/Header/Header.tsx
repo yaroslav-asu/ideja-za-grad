@@ -1,7 +1,7 @@
 import React from "react";
 import Logo from "./Logo/Logo";
 import './Header.scss'
-import LanguageSwitcher from "../LanguageSwitcher/LanguageSwitcher";
+import LanguageSwitcher from "../LanguageSwitcher";
 import {useTranslation} from "react-i18next";
 
 const Header = (props: { openHowToPopup: Function }) => {

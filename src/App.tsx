@@ -13,6 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {useTranslation} from "react-i18next";
 import Header from "./components/Header/Header";
 import HowToUsePopup from "./components/HowToUsePopup/HowToUsePopup";
+import LoadingComponent from "./components/LoadingComponent/LoadingComponent";
 
 type createMenuMarkerType = {
     type: string,
@@ -89,21 +90,22 @@ const App = () => {
     const mounted = useRef(false)
     const {t} = useTranslation()
     const [howToPopupState, changeHowToPopupState] = useState(false)
-    const [loadErr,] = useState(t('notifications.gettingDataError'))
-    const [saveErr,] = useState(t('notifications.saveError'))
-    const [saveSuccess,] = useState(t('notifications.saved'))
-
+    const [isLoading, changeLoadingState] = useState(true)
     const deactivateAllMarkers = () => {
         for (let marker of document.getElementsByClassName('marker--active') as any) {
             marker.classList.remove('marker--active')
         }
     }
+
     React.useEffect(() => {
         if (types.length === 0 && !mounted.current) {
             getTypes().then(res => {
                 changeTypes(res)
+                if (markers.length > 0) {
+                    changeLoadingState(false)
+                }
             }).catch(() => {
-                toast.error(loadErr);
+                toast.error(t('notifications.gettingDataError'));
             })
         }
         if (markers.length === 0 && types.length > 0)
@@ -131,8 +133,11 @@ const App = () => {
                     })
                     changeMarkers((prevMarkers) => [...prevMarkers, newMarker])
                 }
+                if (types.length > 0) {
+                    changeLoadingState(false)
+                }
             }).catch(() => {
-                toast.error(loadErr);
+                toast.error(t('notifications.gettingDataError'));
             })
         mounted.current = true
     }, [markers, types, t])
@@ -148,6 +153,7 @@ const App = () => {
     }
     return (
         <div className="app">
+            {isLoading ? <LoadingComponent/> : null}
             <ToastContainer
                 position="top-right"
                 autoClose={5000}
@@ -178,9 +184,9 @@ const App = () => {
                     onSave={async () => {
                         changeCreateMarkerMenuVisibility(false)
                         await saveMarker({...newMarker}).then(() => {
-                            toast.success(saveSuccess);
+                            toast.success(t('notifications.saved'));
                         }).catch(() => {
-                            toast.error(saveErr);
+                            toast.error(t('notifications.saveError'));
                         })
                         renderMarkers(map as Map, markers)
                     }}
@@ -195,10 +201,11 @@ const App = () => {
                         onClick={(e: any) => {
                             changeCreateMarkerMenuVisibility(false)
                             setTimeout(() => {
+                                const {lng, lat} = e.lngLat
                                 changeCreateMarkerMenuVisibility(true)
                                 changeNewMarker({
                                     ...newMarker,
-                                    coords: [e.lngLat.lng, e.lngLat.lat]
+                                    coords: [lng, lat]
                                 })
                             })
                         }}

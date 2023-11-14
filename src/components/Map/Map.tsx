@@ -1,6 +1,7 @@
 import React, {useEffect, useRef} from 'react';
 import {Map} from 'mapbox-gl';
 import "./Map.scss"
+import {MarkerComponent} from "../Marker/MarkerComponent";
 
 
 export const MapComponent = (props: {
@@ -11,6 +12,7 @@ export const MapComponent = (props: {
     changeMap: Function
 }) => {
     const mapContainer = useRef<HTMLDivElement>(null);
+    let showMarker: MarkerComponent | null = null
 
     useEffect(() => {
         if (props.map) return
@@ -24,7 +26,19 @@ export const MapComponent = (props: {
                 accessToken: process.env.REACT_APP_MAPBOX_TOKEN || "",
                 doubleClickZoom: false
             })
-            map.on('click', e => props.onClick(e))
+            map.on('click', e => {
+                const {lng, lat} = e.lngLat
+                const marker = new MarkerComponent({
+                    coords: [lng, lat],
+                    type: {title: "cross", value: ""},
+                    description: '',
+                    id: 10
+                })
+                showMarker?.remove()
+                showMarker = marker
+                marker.addTo(map)
+                props.onClick(e)
+            })
             props.changeMap(map)
         }
     }, [props]);

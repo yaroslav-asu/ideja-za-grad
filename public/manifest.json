@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Idea Za Grad",
+  "name": "Idea Za Grad helps you find the best ideas for your city",
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
