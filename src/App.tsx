@@ -183,6 +183,10 @@ const App = () => {
                     }}
                     onSave={async () => {
                         changeCreateMarkerMenuVisibility(false)
+                        if (newMarker.type === '') {
+                            toast.error(t('notifications.formFillError'));
+                            return
+                        }
                         await saveMarker({...newMarker}).then(() => {
                             toast.success(t('notifications.saved'));
                         }).catch(() => {
@@ -208,9 +212,6 @@ const App = () => {
                                     coords: [lng, lat]
                                 })
                             })
-                        }}
-                        closeMenu={() => {
-                            changeCreateMarkerMenuVisibility(false)
                         }}
                         startCoords={[20.4563811, 44.8014948]}
                     />

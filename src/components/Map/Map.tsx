@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {MutableRefObject, useEffect, useRef} from 'react';
 import {Map} from 'mapbox-gl';
 import "./Map.scss"
 import {MarkerComponent} from "../Marker/MarkerComponent";
@@ -6,13 +6,12 @@ import {MarkerComponent} from "../Marker/MarkerComponent";
 
 export const MapComponent = (props: {
     onClick: Function,
-    closeMenu: Function,
     startCoords: [number, number],
     map: Map | null,
     changeMap: Function
 }) => {
     const mapContainer = useRef<HTMLDivElement>(null);
-    let showMarker: MarkerComponent | null = null
+    let showMarker: MutableRefObject<MarkerComponent | null> = useRef(null)
 
     useEffect(() => {
         if (props.map) return
@@ -34,8 +33,8 @@ export const MapComponent = (props: {
                     description: '',
                     id: 10
                 })
-                showMarker?.remove()
-                showMarker = marker
+                showMarker?.current?.remove()
+                showMarker.current = marker
                 marker.addTo(map)
                 props.onClick(e)
             })
