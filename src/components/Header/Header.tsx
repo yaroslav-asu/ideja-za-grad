@@ -13,6 +13,7 @@ const Header = (props: { openHowToPopup: Function }) => {
                 <Logo/>
             </div>
             <div className="header_part header_part__right">
+                <a className="markers_data" href={`${process.env.REACT_APP_API_URL}markers`} target="_blank">{t("markersData")}</a>
                 <button className={"how_to_button"}
                         onClick={() => props.openHowToPopup()}>{t("howToUse.howToUse")}</button>
                 <LanguageSwitcher/>
