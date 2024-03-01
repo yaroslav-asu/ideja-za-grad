@@ -8,12 +8,15 @@ import {Map} from "mapbox-gl";
 import MarkerDescription from "./components/MarkerDescription/MarkerDescription";
 import markerType from "./types/markerTypes";
 import axios from "./axios";
-import {ToastContainer, toast} from "react-toastify";
+import {toast, ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import {useTranslation} from "react-i18next";
 import Header from "./components/Header/Header";
 import HowToUsePopup from "./components/HowToUsePopup/HowToUsePopup";
 import LoadingComponent from "./components/LoadingComponent/LoadingComponent";
+import TelegramIcon from '@mui/icons-material/Telegram';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import EmailIcon from '@mui/icons-material/Email';
 
 type createMenuMarkerType = {
     type: string,
@@ -230,6 +233,12 @@ const App = () => {
                     />
                 </div>
             </main>
+            <div className="about">
+                Alex Radchenko
+                <a href="https://t.me/alexradchenko2" target="_blank"><TelegramIcon/></a>
+                <a href="https://twitter.com/alex_radch" target="_blank"><TwitterIcon/></a>
+                <a href="mailto:alexradchenko@mail.ru" target="_blank"><EmailIcon/></a>
+            </div>
         </div>
     )
 }
